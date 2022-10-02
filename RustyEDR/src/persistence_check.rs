@@ -1,0 +1,1 @@
+// Grab all persistence locations and search for malicious material
