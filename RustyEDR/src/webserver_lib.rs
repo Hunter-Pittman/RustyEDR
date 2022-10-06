@@ -45,11 +45,47 @@ pub async fn incident_alert(auth: &str, payload: FullIncident) -> String {
             return "Request delivered".to_string();
         },
         _ => {
-            panic!("Request not delivered");
+            return "Request not delivered".to_string();
         }
     }
 }
 
+#[derive(Serialize)]
+struct Hearbeat {
+    alive: bool
+}
+
+// POST incident alert to webserver
+pub async fn heartbeat(auth: &str) -> String {
+    //env_logger::init();
+    let endpoint = "BlahBlah/blah";
+    let full_url = WEB_URL.to_string() + endpoint; 
+
+    let payload = Hearbeat {
+        alive: true
+    };
+
+    let mut headers = HeaderMap::new();
+    headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
+
+
+    let client = reqwest::Client::new();
+    let res = client
+        .post(full_url)
+        .headers(headers)
+        .json(&payload)
+        .send()
+        .await;
+
+    match res.unwrap().status() {
+        reqwest::StatusCode::OK => {
+            return "beep".to_string();
+        },
+        _ => {
+            return "flatline".to_string();
+        }
+    }
+}
 
 // GET enviroment IPs from webserver
 pub async fn get_ips() {

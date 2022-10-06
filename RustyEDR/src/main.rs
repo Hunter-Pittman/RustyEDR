@@ -1,31 +1,31 @@
 // Modules
 mod webserver_lib;
+mod data_populate;
+mod database_manager;
+mod process_monitor;
 
 use std::fs::File;
 use std::io::prelude::*;
 use webserver_lib::*;
 use futures::prelude::*;
-
-
+use std::path::Path;
+use std::env;
+use sqlite;
+use data_populate::*;
+use database_manager::*;
+use process_monitor::*;
 
 #[tokio::main]
 async fn main() {
-    let auth = "deug";
-    let incident_info = PartialIncident {
-        name: "bruh_name".to_string(),
-        user: "bruh_user".to_string(),
-        processid: 1190,
-        remoteip: "bruh_remoteip".to_string(),
-        cmdrun: "bruh_cmdrun".to_string()
-    };
+    // Initial environment checks
+    let pwd = env::current_dir().unwrap();
+    let full_path = pwd.display().to_string() + "\\rustyedr.db";
+    let db_exists = Path::new(&full_path).exists();
 
-    let payload = FullIncident {
-        hostname: "bruh_hostname".to_string(),
-        incident: incident_info
-    };
+    if db_exists == false {
+        create_database(full_path);
+    }
 
-    //let blocking_task = tokio::task::spawn_blocking(|| {
-        //incident_alert(auth, payload);
-    //});
-    incident_alert(auth, payload).await;
+    process_info();
+
 }
