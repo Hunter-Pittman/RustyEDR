@@ -18,8 +18,9 @@ fn overall_info() -> ComputerInfo {
     let active_computer_name = hklm.open_subkey("SYSTEM\\CurrentControlSet\\Control\\ComputerName\\ActiveComputerName").unwrap();
     let powershell = hklm.open_subkey("SOFTWARE\\Microsoft\\PowerShell\\1\\ShellIds\\Microsoft.PowerShell").unwrap();
     let tcpip_params = hklm.open_subkey("SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters").unwrap();
-
     let domain: String = tcpip_params.get_value("Domain").unwrap();
+
+    
 
     let domain = if domain.is_empty() == true {
         "System is not in a domain".to_string()
@@ -42,21 +43,3 @@ fn overall_info() -> ComputerInfo {
 
 }
 
-pub fn create_database(db_path: String) {
-    let conn = sqlite::open(db_path).unwrap();
-
-    conn
-        .execute(
-            "CREATE TABLE 'overall' (
-                'hostanme'	TEXT UNIQUE,
-                'ip_addr'	TEXT,
-                'domain'	TEXT,
-                'firewall_state'	INTEGER,
-                'defender_state'	INTEGER,
-                'sysmon_state'	INTEGER,
-                PRIMARY KEY('hostanme')
-            );"
-        ).unwrap();
-
-        
-}
