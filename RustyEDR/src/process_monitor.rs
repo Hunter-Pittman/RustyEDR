@@ -1,7 +1,7 @@
 // Continious process monitoring using background_jobs
 use sysinfo::*;
 
-struct Process {
+pub struct Process {
     pid: u32,
     parent_process: u32,
     name: String,

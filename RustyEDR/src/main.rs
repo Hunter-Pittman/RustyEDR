@@ -3,6 +3,7 @@ mod webserver_lib;
 mod data_populate;
 mod database_manager;
 mod process_monitor;
+mod winapi_backend;
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -26,6 +27,6 @@ async fn main() {
         create_database(full_path);
     }
 
-    process_info();
+    println!("{}", overall_info());
 
 }
